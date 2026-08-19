@@ -1,7 +1,7 @@
+local bit = require "bit"
 local uptable = {}
 uptable["VALUE_VERSION"] = 22
 local JSON = require "cjson"
-
 local function bit_band(a, b)
     local cloud_bl = true
     local ret
@@ -12,7 +12,6 @@ local function bit_band(a, b)
     end
     return ret
 end
-
 local function makeSum(tmpbuf, start_pos, end_pos)
     local resVal = 0
     for si = start_pos, end_pos do resVal = resVal + tmpbuf[si] end
@@ -20,7 +19,6 @@ local function makeSum(tmpbuf, start_pos, end_pos)
     resVal = bit.band(resVal, 0x00ff)
     return resVal
 end
-
 local crc8_854_table = {
     0, 94, 188, 226, 97, 63, 221, 131, 194, 156, 126, 32, 163, 253, 31, 65, 157,
     195, 33, 127, 252, 162, 64, 30, 95, 1, 227, 189, 62, 96, 130, 220, 35, 125,
@@ -46,21 +44,18 @@ local function crc8_854(dataBuf, start_pos, end_pos)
     end
     return crc
 end
-
 local function decodeJsonToTable(cmd)
     local tb
     if JSON == nil then JSON = require "cjson" end
     tb = JSON.decode(cmd)
     return tb
 end
-
 local function encodeTableToJson(luaTable)
     local jsonStr
     if JSON == nil then JSON = require "cjson" end
     jsonStr = JSON.encode(luaTable)
     return jsonStr
 end
-
 local function string2table(hexstr)
     local tb = {}
     local i = 1
@@ -72,26 +67,22 @@ local function string2table(hexstr)
     end
     return tb
 end
-
 local function string2hexstring(str)
     local ret = ""
     for i = 1, #str do ret = ret .. string.format("%02x", str:byte(i)) end
     return ret
 end
-
 local function table2hex(cmd)
     local ret = ""
     for i = 1, #cmd do ret = ret .. string.format("%02x", cmd[i]) end
     return ret
 end
-
 local function table2string(cmd)
     local ret = ""
     local i
     for i = 1, #cmd do ret = ret .. string.char(cmd[i]) end
     return ret
 end
-
 local function checkBoundary(data, min, max)
     if (not data) then data = 0 end
     data = tonumber(data)
@@ -105,14 +96,13 @@ local function checkBoundary(data, min, max)
         end
     end
 end
-
 local function print_lua_table(lua_table, indent)
     indent = indent or 0
     for k, v in pairs(lua_table) do
         if type(k) == "string" then k = string.format("%q", k) end
         local szSuffix = ""
         if type(v) == "table" then szSuffix = "{" end
-        local szPrefix = string.rep(" ", indent)
+        local szPrefix = string.rep("    ", indent)
         formatting = szPrefix .. "[" .. k .. "]" .. " = " .. szSuffix
         if type(v) == "table" then
             print(formatting)
@@ -129,7 +119,6 @@ local function print_lua_table(lua_table, indent)
         end
     end
 end
-
 uptable["KEY_VERSION"] = "version"
 uptable["KEY_WORK_STATUS"] = "work_status"
 uptable["KEY_MODE"] = "mode"
@@ -172,7 +161,6 @@ uptable["KEY_UVSWITCH"] = "uvswitch"
 uptable["KEY_DRY_STEP_SWITCH"] = "dry_step_switch"
 uptable["KEY_HUMIDITY"] = "humidity"
 uptable["KEY_DRY_SET_MIN"] = "dry_set_min"
-
 uptable["VALUE_ON"] = "on"
 uptable["VALUE_OFF"] = "off"
 uptable["VALUE_WORK_STATUS_POWER_ON"] = "power_on"
@@ -207,7 +195,6 @@ uptable["VALUE_OPERATOR_START"] = "start"
 uptable["VALUE_OPERATOR_PAUSE"] = "pause"
 uptable["VALUE_UNKNOWN"] = "unknown"
 uptable["VALUE_INVALID"] = "invalid"
-
 uptable["BYTE_DEVICE_TYPE"] = 0xE1
 uptable["BYTE_CONTROL_REQUEST"] = 0x02
 uptable["BYTE_QUERY_REQUEST"] = 0x03
@@ -240,7 +227,6 @@ uptable["BYTE_MODE_HOT_POT_WASH"] = 0x12
 uptable["BYTE_MODE_QUIET_NIGHT_WASH"] = 0x13
 uptable["BYTE_MODE_LESS_WASH"] = 0x14
 uptable["BYTE_MODE_OIL_NET_WASH"] = 0x16
-
 local function extractBodyBytes(byteData)
     local msgLength = #byteData
     local msgBytes = {}
@@ -252,7 +238,6 @@ local function extractBodyBytes(byteData)
     end
     return bodyBytes
 end
-
 local function assembleUart(bodyBytes, type)
     local bodyLength = #bodyBytes + 1
     if bodyLength == 0 then return nil end
@@ -272,7 +257,6 @@ local function assembleUart(bodyBytes, type)
     for i = 1, length do msgBytesTemp[i] = msgBytes[i - 1] end
     return msgBytesTemp
 end
-
 local function updateDataByJson(luaTable, bodyBytes)
     if luaTable[uptable["KEY_LOCK"]] ~= nil then
         bodyBytes[0] = 0x83
@@ -478,7 +462,6 @@ local function updateDataByJson(luaTable, bodyBytes)
         end
     end
 end
-
 local function updateJsonByData(binData)
     local byteData = string2table(binData)
     local bodyBytes = extractBodyBytes(byteData)
@@ -701,7 +684,6 @@ local function updateJsonByData(binData)
     retTable["status"] = streams
     return encodeTableToJson(retTable)
 end
-
 function jsonToData(jsonCmdStr)
     if (#jsonCmdStr == 0) then return nil end
     local json = decodeJsonToTable(jsonCmdStr)
@@ -723,7 +705,6 @@ function jsonToData(jsonCmdStr)
     end
     return table2hex(msgBytes)
 end
-
 function dataToJson(jsonStr)
     if (not jsonStr) then return nil end
     local json = decodeJsonToTable(jsonStr)
