@@ -1,3 +1,4 @@
+local bit = require "bit"
 local JSON = require "cjson"
 local version = 5
 
@@ -152,7 +153,7 @@ local reportMapping = {
         [0x03] = {["name"] = "appointment", ["rshift"] = 0},
         [0x0c] = {["name"] = "prevent_wrinkle_switch", ["rshift"] = 2},
         [0x30] = {["name"] = "baby_lock", ["rshift"] = 4},
-        [0xc0] = {["name"] = "light", ["rshift"] = 6}
+        [0xc0] = {["name"] = "light", ["rshift"] = 6},
     },
     [24] = {
         [0x03] = {["name"] = "remind_sound", ["rshift"] = 0},

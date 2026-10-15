@@ -64,3 +64,25 @@ that supports Lua downloads but not plugin downloads.
 
 1. Format Lua protocol files with VS Code or an equivalent formatter.
 2. Submit a pull request containing only the intended protocol files and documentation.
+
+## Verified device downloads
+
+The following files were retrieved from Meiju Cloud on 2026-10-15 for the exact
+device identities below, with the model and subtype checked against the local
+device cache. SHA-256 values identify the original downloads before formatting.
+
+| Device | Model | Subtype | Protocol file | Original SHA-256 |
+| --- | --- | --- | --- | --- |
+| Washer | 38131140 | 13145 | [T_0000_DB_33.lua](lua/0xDB/T_0000_DB_33.lua) | `74bef6812edb12ec892dfb8b38a3ebce693c226da3949b0fd5e8f9ca574669f4` |
+| Dryer | 38208801 | 13367 | [T_0000_DC_5.lua](lua/0xDC/T_0000_DC_5.lua) | `abe14f8761bc35bc09010fe26a2bd0c0a09bd2a92a26eb01f198d470d9da669b` |
+
+The washer download has the same Lua tokens as the existing formatted DB file,
+so no duplicate was added. The dryer download adds an explicit `bit` import and a
+trailing table comma to the existing DC file; both are preserved here. All other
+DC tokens match. Both files parse successfully and match their downloads after
+ignoring whitespace and comments. They were inspected statically, not executed.
+
+These downloads provide protocol references for
+[midea-lan#206](https://github.com/wuwentao/midea-lan/pull/206) and
+[midea-lan#214](https://github.com/wuwentao/midea-lan/pull/214). Shared Lua files do
+not establish identical capabilities across different appliance models.
