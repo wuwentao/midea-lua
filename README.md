@@ -62,5 +62,15 @@ that supports Lua downloads but not plugin downloads.
 
 ## Contributing
 
-1. Format Lua protocol files with VS Code or an equivalent formatter.
-2. Submit a pull request containing only the intended protocol files and documentation.
+1. Place each Lua protocol file under `lua/` in the subdirectory for its device
+   type byte, e.g. `lua/0xAC/` for air conditioners or `lua/0xCD/` for heat-pump
+   water heaters. Create the `lua/0x<TYPE>/` directory if it does not yet exist.
+   Keep the original downloaded filename so the embedded SN8 and version are
+   preserved.
+2. Format the Lua source before committing. Use the VS Code Lua formatter,
+   [StyLua](https://github.com/JohnnyMorganz/StyLua), or an equivalent tool so
+   the code is readable and reviewable later from the web UI. Vendor files often
+   arrive minified or machine-formatted, and formatting them up front keeps diffs
+   and online browsing manageable.
+3. Submit a pull request containing only the intended protocol files and
+   documentation.
