@@ -67,10 +67,14 @@ that supports Lua downloads but not plugin downloads.
    water heaters. Create the `lua/0x<TYPE>/` directory if it does not yet exist.
    Keep the original downloaded filename so the embedded SN8 and version are
    preserved.
-2. Format the Lua source before committing. Use the VS Code Lua formatter,
-   [StyLua](https://github.com/JohnnyMorganz/StyLua), or an equivalent tool so
-   the code is readable and reviewable later from the web UI. Vendor files often
-   arrive minified or machine-formatted, and formatting them up front keeps diffs
-   and online browsing manageable.
+2. Format the Lua source before committing — this is required, not optional.
+   Use [StyLua](https://github.com/JohnnyMorganz/StyLua) with its default
+   configuration (`stylua <file>`), the VS Code Lua formatter, or an equivalent
+   tool so the code is readable and reviewable later from the web UI. Vendor
+   files often arrive minified or machine-formatted, and formatting them up
+   front keeps diffs and online browsing manageable. Formatting must only reflow
+   whitespace and indentation; it must never change identifiers, constants, or
+   logic. The repository intentionally ships no `stylua.toml`, so the tool's
+   defaults apply — do not add a formatter config.
 3. Submit a pull request containing only the intended protocol files and
    documentation.
