@@ -64,9 +64,34 @@ beyond `cjson`). A typical file defines:
   (`makeSum`, `crc8_854`), and hex/string conversion utilities.
 
 These are vendor-supplied, often minified or machine-formatted. **Do not
-refactor, reformat, or "improve" existing protocol files.** Treat them as
-received data. Only touch a Lua file when the user explicitly asks you to analyze
-or fix a specific protocol behavior.
+refactor, rename, or "improve" the logic of protocol files.** Treat the
+protocol content as received data — never change identifiers, constants,
+control flow, or behavior. Only touch a Lua file's logic when the user
+explicitly asks you to analyze or fix a specific protocol behavior.
+
+This is distinct from layout formatting: running a Lua code formatter to
+normalize whitespace and indentation is not a refactor and **is required**
+before a file is committed (see "Formatting Lua files" below).
+
+## Formatting Lua files
+
+**Format every Lua file with a Lua code formatter before you commit it or open
+a PR.** Vendor files frequently arrive minified onto a single line or with
+machine formatting; un-formatted files are unreviewable in the GitHub web UI
+and produce useless diffs. Formatting is a mechanical, whitespace-only pass — it
+must never alter identifiers, constants, strings, or control flow.
+
+- Preferred tool: [StyLua](https://github.com/JohnnyMorganz/StyLua) with its
+  default configuration (`stylua <file>`). The repo intentionally ships no
+  `stylua.toml`, so the tool's defaults apply.
+- Alternatives: the VS Code Lua formatter (e.g. the `sumneko`/Lua Language
+  Server or `stylua` extension) or any equivalent Lua formatter, as long as the
+  result is stable and only reflows layout.
+- Do not add a `stylua.toml`, editor config, or other formatter config to the
+  repo unless the user explicitly asks — defaults keep contributions uniform.
+- After formatting, confirm the pass changed layout only. If a formatter errors,
+  the file likely failed to parse; report it rather than hand-editing the file
+  to make the formatter happy.
 
 ## Working rules for agents
 
@@ -94,6 +119,13 @@ or fix a specific protocol behavior.
 - Keep PRs focused: only the intended protocol files and documentation.
 - Before committing, confirm no unintended files (stray downloads, secrets) are
   staged. Prefer staging specific paths over `git add .`.
+- Every PR you open must follow `.github/pull_request_template.md`: fill in the
+  Summary fields (device type, model/SN8, cloud account) and tick each checklist
+  item, including that the Lua source was formatted. Do not delete template
+  sections or submit an empty description.
+- If information the template asks for is missing (e.g. the SN8 cannot be read
+  from the filename, or the source cloud account is unknown), do not guess or
+  leave it blank — ask the user to provide or confirm it before opening the PR.
 
 ## Verification
 
@@ -102,7 +134,11 @@ There is nothing to build or test. "Verification" for a contribution means:
 1. The file is placed in the correct `lua/0x<TYPE>/` directory for its type.
 2. The filename is unchanged from the download.
 3. The file is valid UTF-8, LF line endings, no accidental truncation.
-4. Optionally, `luac -p <file>` or `lua -l <file>` to confirm it parses, if a
+4. The file has been run through a Lua formatter (StyLua default config, or an
+   equivalent) and the formatter reports no further changes — i.e. it is stable.
+   StyLua also parses the file while formatting, so a clean run doubles as a
+   syntax check.
+5. Optionally, `luac -p <file>` or `lua -l <file>` to confirm it parses, if a
    Lua interpreter is available. Do not rewrite the file to make it parse.
 
 ---

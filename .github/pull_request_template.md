@@ -18,8 +18,9 @@ Please fill in the summary and tick the checklist below.
       are created as needed.
 - [ ] The original downloaded filename is preserved (SN8 and version intact);
       files are not renamed.
-- [ ] Lua source was formatted before committing (VS Code Lua formatter, StyLua,
-      or equivalent) so it is readable and reviewable from the web UI.
+- [ ] Lua source was formatted before committing (StyLua default config, the
+      VS Code Lua formatter, or equivalent) so it is readable and reviewable
+      from the web UI. Formatting reflowed whitespace only — no logic changed.
 - [ ] Files are UTF-8 without BOM and use Unix (LF) line endings.
 - [ ] The PR contains only the intended protocol files and documentation — no
       stray downloads, secrets, or unrelated changes.
