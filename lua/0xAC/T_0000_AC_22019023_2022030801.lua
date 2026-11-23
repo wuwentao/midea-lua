@@ -2201,7 +2201,7 @@ local function binToModel(binData)
 			keyP["analysis_value"] = keyP["analysis_value"] .. ",comfort_power_save"
 		end
 	end
-	if (dataType == 0x04 and messageBytes[0] == 0xA1) then
+	if dataType == 0x04 and messageBytes[0] == 0xA1 then
 		keyP["currentWorkTime"] = bit.bor(
 			(bit.band(bit.lshift(messageBytes[9], 8), 0xFF00)),
 			(bit.band(messageBytes[10], 0x00FF))
